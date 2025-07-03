@@ -7,7 +7,7 @@ app = Flask(__name__)
 def google_form():
     center_lat = 10.939344   # Your target latitude
     center_lng = 76.9590116   # Your target longitude    
-    max_distance = 50  # Radius in meters
+    max_distance = 100  # Radius in meters
 
     return render_template_string(f"""
     <!DOCTYPE html>

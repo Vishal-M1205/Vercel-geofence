@@ -1,13 +1,12 @@
 from flask import Flask, render_template_string
 import os
-
 app = Flask(__name__)
 
 @app.route("/")
 def google_form():
-    center_lat = 10.9373469   # Your target latitude
-    center_lng = 76.9592715   # Your target longitude    
-    max_distance = 100  # Radius in meters
+    center_lat = 10.9373469   # Center latitude (hall location)
+    center_lng = 76.9592715   # Center longitude
+    default_radius = 100      # Default radius in meters for Android/others
 
     return render_template_string(f"""
     <!DOCTYPE html>
@@ -15,7 +14,7 @@ def google_form():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Google Form</title>
+        <title>Hall Attendance Verification</title>
         <style>
             #location-display {{
                 position: fixed;
@@ -27,6 +26,7 @@ def google_form():
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 font-family: Arial, sans-serif;
                 font-size: 14px;
+                z-index: 999;
             }}
             #form-container iframe {{
                 border: none;
@@ -44,7 +44,7 @@ def google_form():
         <script>
             const centerLat = {center_lat};
             const centerLng = {center_lng};
-            const maxDistance = {max_distance}; // in meters
+            let maxDistance = {default_radius};  // default in meters
 
             function toRadians(degrees) {{
                 return degrees * (Math.PI / 180);
@@ -59,7 +59,7 @@ def google_form():
                     Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
                     Math.sin(dLng / 2) * Math.sin(dLng / 2);
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                return R * c; // Distance in meters
+                return R * c;
             }}
 
             function displayLocation(lat, lng) {{
@@ -68,6 +68,11 @@ def google_form():
             }}
 
             function checkAccess() {{
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                if (/iPhone|iPad|iPod/i.test(userAgent)) {{
+                    maxDistance = 150; // Increase range for iPhones
+                }}
+
                 if (navigator.geolocation) {{
                     navigator.geolocation.getCurrentPosition(position => {{
                         const userLat = position.coords.latitude;
@@ -84,10 +89,14 @@ def google_form():
                                     Loading…
                                 </iframe>`;
                         }} else {{
-                            document.getElementById('form-container').innerHTML = "<h2>Access Denied: You are not within the allowed location.</h2>";
+                            document.getElementById('form-container').innerHTML = "<h2>Access Denied: You are not within the allowed location range.
+                            </br>
+                            <h2 style="color:red;">If iPhone user: Enable "Precise Location" </h2></h2>";
                         }}
                     }}, () => {{
-                        document.getElementById('form-container').innerHTML = "<h2>Location access is required to access this form.</h2>";
+                        document.getElementById('form-container').innerHTML = "<h2>Location access is required to access this form.
+                        </br>
+                        <h2>If iPhone user: Use Chrome or Google (Don't use safari)</h2></h2>";
                     }});
                 }} else {{
                     document.getElementById('form-container').innerHTML = "<h2>Geolocation is not supported by your browser.</h2>";
@@ -95,6 +104,9 @@ def google_form():
             }}
 
             document.addEventListener('DOMContentLoaded', checkAccess);
+            console.log(maxDistance);
+            console.log(navigator.userAgent);
+            
         </script>
     </head>
     <body>
@@ -106,4 +118,6 @@ def google_form():
     </html>
     """)
 
-
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Default to 5000 for local dev
+    app.run(host='0.0.0.0', port=port)

@@ -4,9 +4,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def google_form():
-    center_lat = 10.9373469   # Center latitude
-    center_lng = 76.9592715   # Center longitude
-    default_radius = 100      # Default radius in meters
+    center_lat = 10.9393171   # Center latitude
+    center_lng = 76.9589776   # Center longitude
+    default_radius = 50      # Default radius in meters
 
     return render_template_string(f"""
     <!DOCTYPE html>

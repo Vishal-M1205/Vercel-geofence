@@ -109,6 +109,7 @@ def google_form():
             }}
 
             document.addEventListener('DOMContentLoaded', checkAccess);
+            console.log(maxDistance)
         </script>
     </head>
     <body>

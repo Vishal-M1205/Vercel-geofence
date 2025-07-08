@@ -6,7 +6,7 @@ app = Flask(__name__)
 def google_form():
     center_lat = 10.9393171   # Center latitude
     center_lng = 76.9589776   # Center longitude
-    default_radius = 100      # Default radius in meters
+    default_radius = 50      # Default radius in meters
 
     return render_template_string(f"""
     <!DOCTYPE html>
@@ -71,7 +71,7 @@ def google_form():
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
                 console.log("User-Agent:", userAgent);
                 if (/iPhone|iPad|iPod/i.test(userAgent)) {{
-                    maxDistance = 150;
+                    maxDistance = 1000;
                 }}
 
                 if (navigator.geolocation) {{

@@ -93,7 +93,7 @@ def google_form():
                             document.getElementById('form-container').innerHTML = `
                                 <div style='text-align: center;'>
                                     <h2>Access Denied: You are not within the allowed location range.</h2>
-                                    <p style="color:red;">If iPhone user: Enable "Precise Location" in Settings</p>
+                                    <p style="color:red;">If iPhone user: Enable "Precise Location" in Settings or Try Reloading the Page</p>
                                 </div>`;
                         }}
                     }}, () => {{

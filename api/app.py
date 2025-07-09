@@ -6,7 +6,7 @@ app = Flask(__name__)
 def google_form():
     center_lat = 10.9393171   # Center latitude
     center_lng = 76.9589776   # Center longitude
-    default_radius = 10      # Default radius in meters
+    default_radius = 30      # Default radius in meters
 
     return render_template_string(f"""
     <!DOCTYPE html>
@@ -85,7 +85,7 @@ def google_form():
                         if (distance <= maxDistance) {{
                             document.getElementById('form-container').innerHTML = `
                                 <iframe 
-                                    src="https://forms.gle/JfQTjvY4C6NjmFfQ7"
+                                    src="https://forms.gle/LhsRkaaLEwXJwozU8"
                                     width="640" height="520" frameborder="0">
                                     Loading…
                                 </iframe>`;
